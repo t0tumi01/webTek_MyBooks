@@ -1,20 +1,43 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useState, useEffect } from 'react';
+import { Text } from 'react-native';
+import {useFonts} from 'expo-font';
 
-export default function App() {
+import Scanner from './screens/Scanner';
+import Home from './screens/Home';
+import AddBook from './screens/AddBook';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
+
+function App() {
+
+  /** Load external fonts */
+  const[fontsLoaded] = useFonts({
+    Rubik: require('./assets/fonts/Rubik-Regular.ttf'), 
+    RubikBold: require('./assets/fonts/Rubik-Bold.ttf'),
+  });
+
+  /** Return if font loading failed */
+  if(!fontsLoaded) { 
+    return <Text>Requesting for Camera Permission</Text>
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }}/>
+      <Stack.Screen name="Scanner" component={Scanner}/>
+      <Stack.Screen name="Add Book" component={AddBook}/>
+    </Stack.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default () => {
+  return(
+  <NavigationContainer>
+    <App/>
+  </NavigationContainer>
+)}
+
+
